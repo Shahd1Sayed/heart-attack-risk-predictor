@@ -89,6 +89,17 @@ In our trained model, **Troponin** (43.3% importance) and **CK-MB** (20.7% impor
 
 ---
 
+## 🔬 Exploratory Data Analysis (EDA)
+
+The `research_and_experiments/heart_attack.ipynb` notebook contains a complete clinical EDA. Before training models, we analyzed the dataset visually to understand the true drivers of prediction:
+
+1. **Target Distribution:** The dataset is heavily skewed towards "High" Risk (61%), indicating collection from an acute care setting rather than a general population screening.
+2. **Demographics & Vitals:** Analysis showed that Age, Gender, Blood Pressure, and Heart Rate distributions overlap heavily across all risk categories. They are very poor independent predictors in this dataset.
+3. **The Smoking Gun (Biomarkers):** Log-scale visualizations of **Troponin** and **CK-MB** revealed the true predictive signal. Every single "Low" risk patient is clustered at the bottom, while "Moderate" and "High" risk explode upward past clinical diagnostic cutoffs.
+4. **Conclusion:** A mathematical correlation heatmap proved that the targets (`Risk_Level`) were likely labeled using medical threshold rules applied directly to Troponin and CK-MB.
+
+---
+
 ## 🤖 Machine Learning Pipeline & Model Architecture
 
 The core of this application is a **Random Forest Classifier**. We chose this architecture because it is highly robust against overfitting, handles non-linear relationships well, and naturally provides feature importance rankings (which is critical for medical explainability).
@@ -158,6 +169,7 @@ heart-attack-risk-predictor/
 └── research_and_experiments/       # Exploratory analysis & training (not needed for production)
     ├── heart_attack.ipynb          # Jupyter notebook with EDA and visualizations
     ├── Heart_Attack_Risk_Levels_Dataset.csv   # Raw dataset (1,319 patient records)
+    ├── deploy_to_hf.py             # Python script for pushing securely to HF Spaces via API
     ├── train_model.py              # Full training pipeline with diagnostics
     ├── save_as_pkl.py              # Script to bundle model artifacts into model.pkl
     ├── output.txt                  # Training output logs
