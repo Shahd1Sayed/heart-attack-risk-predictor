@@ -89,7 +89,9 @@ In our trained model, **Troponin** (43.3% importance) and **CK-MB** (20.7% impor
 
 ---
 
-## 🤖 Machine Learning Pipeline
+## 🤖 Machine Learning Pipeline & Model Architecture
+
+The core of this application is a **Random Forest Classifier**. We chose this architecture because it is highly robust against overfitting, handles non-linear relationships well, and naturally provides feature importance rankings (which is critical for medical explainability).
 
 The training pipeline (`research_and_experiments/train_model.py`) follows a rigorous, multi-stage workflow:
 
@@ -99,12 +101,12 @@ Raw dataset: 1,319 rows × 11 columns
 Target variable: Risk_Level (High / Moderate / Low)
 ```
 
-### Stage 2 — Outlier Cleaning
-Rows with clinically implausible values are removed using evidence-based physiological bounds:
+### Stage 2 — Outlier Cleaning & Physiological Bounding
+Before training, we applied strict physiological bounds to remove erroneous data entries that could skew the model's decision trees:
 
 | Feature | Valid Range | Outliers Removed |
 |---|---|---|
-| Heart rate | 20–300 bpm | 3 (e.g., 1 bpm) |
+| Heart rate | 20–300 bpm | 3 (e.g., one row had 1,111 bpm) |
 | Systolic BP | 50–300 mmHg | 1 |
 | Age | 1–120 years | 0 |
 | CK-MB | 0–500 ng/mL | 0 |
@@ -112,23 +114,32 @@ Rows with clinically implausible values are removed using evidence-based physiol
 
 **Result:** 1,319 → 1,315 rows (4 outliers removed)
 
-### Stage 3 — Encoding & Scaling
-- **Gender**: `LabelEncoder` (Female → 0, Male → 1)
-- **Risk_Level**: `LabelEncoder` (High → 0, Low → 1, Moderate → 2)
-- **All features**: `StandardScaler` (zero mean, unit variance)
+### Stage 3 — Encoding & Feature Scaling
+Machine learning models perform best when numerical data is on a similar scale. We separated the data into features (`X`) and target (`y`), and applied the following transformations:
+1. **Categorical Encoding:** `LabelEncoder` converted Gender (Female → 0, Male → 1) and Risk_Level (High → 0, Low → 1, Moderate → 2).
+2. **Standardization:** We applied `scikit-learn`'s `StandardScaler` to all 8 feature columns. This forces each column to have a mean of `0` and a variance of `1`. 
+   > *Crucially, this exact `StandardScaler` object was fitted on the training data and saved into the final bundle, ensuring that real-time API requests are scaled using the exact same mathematical parameters.*
 
-### Stage 4 — Model Comparison (5-Fold Stratified CV)
-Four models were rigorously evaluated to ensure the best performer was selected:
+### Stage 4 — Model Selection & Hyperparameter Tuning (5-Fold Stratified CV)
+We did not just assume Random Forest was the best. We rigorously tested four different model configurations using **5-Fold Stratified Cross-Validation**. Stratification ensures each of the 5 testing folds maintains the exact class distribution (61% High, 21% Low, 18% Moderate) as the entire dataset.
 
-| Model | Mean CV Accuracy | Std Dev |
-|---|---|---|
-| **Random Forest (default)** | **98.63%** | ±0.52% |
-| Random Forest (balanced) | 98.48% | ±0.59% |
-| XGBoost (default) | 98.48% | ±0.48% |
-| XGBoost (balanced) | 98.63% | ±0.52% |
+| Model | Hyperparameters | Mean CV Accuracy | Std Dev |
+|---|---|---|---|
+| **Random Forest (default)** | `n_estimators=200`, `max_depth=None` | **98.63%** | ±0.52% |
+| Random Forest (balanced) | `class_weight='balanced'` | 98.48% | ±0.59% |
+| XGBoost (default) | `learning_rate=0.1`, `max_depth=6` | 98.48% | ±0.48% |
+| XGBoost (balanced) | Default + `sample_weight` computed | 98.63% | ±0.52% |
 
-### Stage 5 — Final Training & Export
-The winning model (**Random Forest, 200 estimators**) is retrained on the full cleaned dataset and bundled into `model.pkl` alongside the scaler and encoders.
+### Stage 5 — Final Training & Bundle Export
+The winning model configuration (**Random Forest, 200 estimators, no strict class weighting**) was selected because it achieved the highest accuracy while naturally resisting the dataset's mild class imbalance through ensemble bagging.
+
+The model was retrained on the *entire* cleaned dataset. Finally, we used Python's `pickle` library to bundle four distinct objects into a single file (`model.pkl`):
+1. The trained `RandomForestClassifier`
+2. The fitted `StandardScaler`
+3. The `LabelEncoder` for Gender
+4. The `LabelEncoder` for Risk_Level
+
+By bundling them together, the FastAPI backend can flawlessly preprocess incoming API JSON requests identically to the training pipeline before running `model.predict()`.
 
 ---
 
