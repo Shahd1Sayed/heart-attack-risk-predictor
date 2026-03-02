@@ -1,20 +1,7 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
-  <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn">
-  <img src="https://img.shields.io/badge/XGBoost-006400?style=for-the-badge&logo=xgboost&logoColor=white" alt="XGBoost">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge" alt="Status">
-</p>
-
 <h1 align="center">🫀 Heart Attack Risk Predictor</h1>
 
 <p align="center">
   <strong>An AI-powered clinical decision-support tool that predicts a patient's heart attack risk level (High, Moderate, or Low) based on 8 vital signs and cardiac biomarkers, served as a real-time web application powered by a Random Forest classifier and FastAPI.</strong>
-</p>
-
-<p align="center">
-  <em>Disclaimer: This tool is intended for educational and research purposes only. It is not a substitute for professional medical diagnosis. Always consult a qualified healthcare provider for medical decisions.</em>
 </p>
 
 ---
@@ -28,12 +15,9 @@
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
 - [Usage](#-usage)
-- [API Documentation](#-api-documentation)
 - [Model Performance](#-model-performance)
 - [Dataset Description](#-dataset-description)
 - [Feature Importance](#-feature-importance)
-- [Contributing](#-contributing)
-- [License](#-license)
 - [Team Members](#-team-members)
 
 ---
@@ -42,8 +26,7 @@
 
 - **Real-Time Risk Prediction** — Enter 8 patient vitals and receive an instant heart attack risk classification (High / Moderate / Low) with confidence probabilities.
 - **Production-Grade REST API** — Built with FastAPI, featuring automatic request validation via Pydantic schemas, interactive Swagger docs, and ASGI-based async performance.
-- **Modern Glassmorphism UI** — A dark-themed, responsive frontend with animated gradient blobs, color-coded risk badges (🔴 High / 🟡 Moderate / 🟢 Low), and animated probability bars.
-- **Optimized ML Pipeline** — Includes outlier cleaning, `StandardScaler` feature normalization, class-imbalance analysis, and a rigorous 4-model comparison (RF vs. XGBoost × default vs. balanced).
+- **Modern UI** — A dark-themed, responsive frontend with animated gradient blobs, color-coded risk badges (🔴 High / 🟡 Moderate / 🟢 Low), and animated probability bars.
 - **Bundled Model Artifact** — The trained model, scaler, and label encoders are serialized into a single `model.pkl` for zero-configuration deployment.
 - **Clinically Interpretable** — Feature importance rankings show exactly which vitals drive predictions, aligning with established cardiology literature.
 
@@ -107,7 +90,7 @@ Rows with clinically implausible values are removed using evidence-based physiol
 
 | Feature | Valid Range | Outliers Removed |
 |---|---|---|
-| Heart rate | 20–300 bpm | 3 (e.g., 1,111 bpm) |
+| Heart rate | 20–300 bpm | 3 (e.g., 1 bpm) |
 | Systolic BP | 50–300 mmHg | 1 |
 | Age | 1–120 years | 0 |
 | CK-MB | 0–500 ng/mL | 0 |
@@ -272,15 +255,6 @@ curl -X POST http://127.0.0.1:8000/predict \
 
 ---
 
-## 📡 API Documentation
-
-FastAPI auto-generates interactive API documentation. After starting the server, visit:
-
-| Documentation | URL |
-|---|---|
-| **Swagger UI** (interactive) | [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) |
-| **ReDoc** (read-only) | [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) |
-
 ### Endpoints
 
 #### `GET /`
@@ -401,15 +375,6 @@ Gender                         ▏                       0.7%
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! If you would like to improve this project, please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add some amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
 
 ### Development Setup
 
@@ -420,20 +385,10 @@ pip install pandas xgboost jupyter matplotlib seaborn
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 👥 Team Members
 
-| Name | Role | GitHub |
-|---|---|---|
-| **Shahd** | Full-Stack Developer & ML Engineer | [@Shahd1Sayed](https://github.com/Shahd1Sayed) |
-
+| Name |
+|---|
+| **Shahd Sayed** |
+| **Shahd Mohammed** |
 ---
-
-<p align="center">
-  <sub>Built with ❤️ for better cardiac care</sub>
-</p>
