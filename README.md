@@ -1,7 +1,21 @@
+---
+title: Heart Attack Risk Predictor
+emoji: 🫀
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 <h1 align="center">🫀 Heart Attack Risk Predictor</h1>
 
 <p align="center">
   <strong>An AI-powered clinical decision-support tool that predicts a patient's heart attack risk level (High, Moderate, or Low) based on 8 vital signs and cardiac biomarkers, served as a real-time web application powered by a Random Forest classifier and FastAPI.</strong>
+</p>
+
+<p align="center">
+  <a href="https://huggingface.co/spaces/Shahd1sayed/heart-attack-risk-predictor"><strong>🔴 TRY THE LIVE DEMO ON HUGGING FACE SPACES 🔴</strong></a>
 </p>
 
 ---
@@ -387,8 +401,9 @@ pip install pandas xgboost jupyter matplotlib seaborn
 
 ## 👥 Team Members
 
-| Name |
-|---|
-| **Shahd Sayed** |
-| **Shahd Mohammed** |
+| Name | Role | GitHub |
+|---|---|---|
+| **Shahd Sayed** | Machine Learning Engineer | [@Shahd1Sayed](https://github.com/Shahd1Sayed) |
+| **Shahd Mohammed** | Full-Stack Developer | |
+
 ---
